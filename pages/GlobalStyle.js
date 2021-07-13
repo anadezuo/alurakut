@@ -1,7 +1,7 @@
 import { createGlobalStyle } from "styled-components";
 import { AlurakutStyles } from "../src/lib/AlurakutCommons";
 
-export const GlobalStyle = createGlobalStyle`
+const GlobalStyle = createGlobalStyle`
 
   //reset de padrão
   * {
@@ -32,3 +32,5 @@ export const GlobalStyle = createGlobalStyle`
 
    ${AlurakutStyles}
 `;
+
+export default GlobalStyle;

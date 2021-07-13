@@ -50,12 +50,12 @@ export default function Home() {
             </h2>
 
             <ul>
-              {pessoasFavoritas.map((itemAtual) => {
+              {pessoasFavoritas.map((pessoa) => {
                 return (
                   <li>
-                    <a href={`/users/${itemAtual}`} key={itemAtual}>
-                      <img src={`https://github.com/${itemAtual}.png`} />
-                      <span>{itemAtual}</span>
+                    <a href={`/users/${pessoa}`} key={pessoa}>
+                      <img src={`https://github.com/${pessoa}.png`} />
+                      <span>{pessoa}</span>
                     </a>
                   </li>
                 );

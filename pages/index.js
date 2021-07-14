@@ -18,13 +18,27 @@ export default function Home() {
     );
   }, []);
 
-  const [community, setCommunity] = useState([{
-    id: new Date().toISOString(),
-    name: 'Eu odeio acordar cedo',
-    alt: 'Eu odeio acordar cedo',
-    image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg',
-    url: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
-  }]);
+  const [community, setCommunity] = useState([
+    {
+      id: new Date().toISOString(),
+      name: 'Fazendo amizades',
+      image: 'https://img.cancaonova.com/cnimages/canais/uploads/sites/6/2019/10/formacao_1600x1200-a-amizade-e-um-dom-do-amor.jpg'
+    },
+    {
+      id: new Date().toISOString(),
+      name: 'Amor pela fotografia',
+      image: 'https://guiadoestudante.abril.com.br/wp-content/uploads/sites/4/2020/05/nota-docs-fotografia.jpg'
+    },
+    {
+      id: new Date().toISOString(),
+      name: 'Eu odeio acordar cedo',
+      image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
+    },{
+      id: new Date().toISOString(),
+      name: 'Igualdade',
+      image: 'https://static.vecteezy.com/system/resources/previews/000/533/153/non_2x/rainbow-flag-lgbt-symbol-on-heart-vector.jpg'
+    }
+  ]);
 
   function handleCreateCommunity(event){
     event.preventDefault();
@@ -34,9 +48,7 @@ export default function Home() {
     const newCommunity = {
       id: new Date().toISOString(),
       name: dadosForm.get('title'),
-      alt: dadosForm.get('title'),
-      image: dadosForm.get('image') ? dadosForm.get('image') : 'http://placehold.it/300x300',
-      url: dadosForm.get('image')
+      image: dadosForm.get('image') ? dadosForm.get('image') : 'http://placehold.it/300x300'
     }
 
     setCommunity([...community, newCommunity]);

@@ -1,19 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { Box } from "../src/components/Box";
 import MainGrid from "../src/components/MainGrid";
 import { AlurakutMenu, OrkutNostalgicIconSet } from "../src/lib/AlurakutCommons";
 import { ProfileRelationsBoxWrapper } from "../src/components/ProfileRelations";
-import { AlurakutProfileSidebarMenuDefault, AlurakutMenuProfileSidebar } 
-       from "../src/lib/AlurakutCommons";
-import { FriendsList } from "../src/components/FriendsList";
+import { AlurakutMenuProfileSidebar } from "../src/lib/AlurakutCommons";
+import { CardList } from "../src/components/CardList";
+import GitHubService from "../src/api/api";
+
 
 export default function Home() {
   const githubUser = "anadezuo";
 
+  const [friendsList, setFriendsList] = useState([]);
+  useEffect(() => {
+    GitHubService.getFollowers(githubUser, 6, true).then((friendsGit) =>
+      setFriendsList(friendsGit)
+    );
+  }, []);
+
   const [community, setCommunity] = useState([{
     id: new Date().toISOString(),
-    title: 'Eu odeio acordar cedo',
-    imageUrl: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
+    name: 'Eu odeio acordar cedo',
+    alt: 'Eu odeio acordar cedo',
+    image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg',
+    url: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
   }]);
 
   function handleCreateCommunity(event){
@@ -23,8 +33,10 @@ export default function Home() {
 
     const newCommunity = {
       id: new Date().toISOString(),
-      title: dadosForm.get('title'),
-      imageUrl: dadosForm.get('image')
+      name: dadosForm.get('title'),
+      alt: dadosForm.get('title'),
+      image: dadosForm.get('image') ? dadosForm.get('image') : 'http://placehold.it/300x300',
+      url: dadosForm.get('image')
     }
 
     setCommunity([...community, newCommunity]);
@@ -65,7 +77,7 @@ export default function Home() {
                   placeholder="Coloque uma url para usarmos de capa"
                   name="image"
                   area-label="Coloque uma url para usarmos de capa"
-                  type="text"
+                  type="url"
                   >
                 </input>
                 <button
@@ -76,35 +88,20 @@ export default function Home() {
             </form>
           </Box>
         </div>
+
         <div
           className="profileRelationsArea"
           style={{ gridArea: "profileRelationsArea" }}
         >
         <ProfileRelationsBoxWrapper>
-          <FriendsList githubUser={githubUser} quantidade={6} randomico={true}/>
+          <CardList cardList={friendsList} title={'Amigos'} quantity={6}/>
         </ProfileRelationsBoxWrapper>
-
         <ProfileRelationsBoxWrapper>
-          <h2 className="smallTitle">
-            Comunidades ({community.length})
-          </h2>
-
-          <ul>
-            {community.map((item) => {
-              return (
-                <li key={item.id}>
-                  <a href={`/users/${item.title}`} key={item.title}>
-                    <img src={item.imageUrl ? 
-                              item.imageUrl : 
-                              'http://placehold.it/300x300'}/>
-                    <span>{item.title}</span>
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
+          <CardList cardList={community} title={'Comunidades'} quantity={6}/>
         </ProfileRelationsBoxWrapper>
+
         </div>
+
       </MainGrid>
     </>
   );

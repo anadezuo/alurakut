@@ -14,7 +14,7 @@ export function FriendsList({githubUser, quantidade, randomico}) {
 
   return (
     <>
-      <h2 className="smallTitle">Pessoas da comunidade ({friendsList.length})</h2>
+      <h2 className="smallTitle"> Pessoas da comunidade ({friendsList.length})</h2>
       <ul>
         {friendsList.map((friend) => {
           return (
@@ -28,6 +28,8 @@ export function FriendsList({githubUser, quantidade, randomico}) {
           );
         }).slice(0, quantidade)}
       </ul>
+      <hr/>
+      <p className="boxLink"> Ver todos</p>
     </>
   );
 }

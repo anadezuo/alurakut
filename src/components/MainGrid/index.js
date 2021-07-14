@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const MainGrid = styled.main`
+const MainGrid = styled.main`
 width: 100%;
 grid-gap: 10px;
 margin-left: auto;
@@ -26,3 +26,5 @@ padding: 16px;
   //1 fração do espaço disponível
 }
 `;
+
+export default MainGrid;

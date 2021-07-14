@@ -2,7 +2,6 @@ export default class GitHubService
 {
     static async getFollowers(githubUser, quantidade = 0, randomico = false) {
         const url = `https://api.github.com/users/${githubUser}/followers`;
-        console.log(url);
         const params = new URLSearchParams();
 
         if (quantidade > 0) {

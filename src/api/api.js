@@ -19,7 +19,6 @@ export default class GitHubService {
       followersList.push({
         id: follower.login,
         name: follower.login,
-        alt: `amigo ${follower.login}`,
         image: follower.avatar_url,
         url: follower.html_url,
       });

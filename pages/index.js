@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Box } from "../src/components/Box";
 import MainGrid from "../src/components/MainGrid";
 import { AlurakutMenu, OrkutNostalgicIconSet } from "../src/lib/AlurakutCommons";
-import { ProfileRelationsBoxWrapper } from "../src/components/ProfileRelations";
 import { AlurakutMenuProfileSidebar } from "../src/lib/AlurakutCommons";
 import { CardList } from "../src/components/CardList";
 import GitHubService from "../src/api/api";
@@ -16,6 +15,29 @@ export default function Home() {
     GitHubService.getFollowers(githubUser, 6, true).then((friendsGit) =>
       setFriendsList(friendsGit)
     );
+    //TODO: Desligar o useffect
+  }, []);
+
+  const [followers, setFollowers] = useState([]);
+  useEffect(() => {
+    fetch(`https://api.github.com/users/${githubUser}/following`)
+    .then((response)=> {
+      return response.json();
+    })
+    .then((followingGit) => {
+
+      let followingAll = new Array();
+      followingGit.map((following) => {
+        followingAll.push({
+          id: following.login,
+          name: following.login,
+          image: following.avatar_url,
+          url: following.html_url,
+        });
+      })
+      setFollowers(followingAll);
+    })
+    //TODO: Desligar o useffect
   }, []);
 
   const [community, setCommunity] = useState([
@@ -63,12 +85,14 @@ export default function Home() {
   return (
     <>
       <AlurakutMenu githubUser={githubUser} />
+
       <MainGrid>
         <div className="profileArea" style={{ gridArea: "profileArea" }}>
           <Box as="aside">
             <AlurakutMenuProfileSidebar githubUser={githubUser} />
           </Box>
         </div>
+
         <div className="welcomeArea" style={{ gridArea: "welcomeArea" }}>
           <Box>
             <h1 className="title">Bem vindo(a)</h1>
@@ -105,13 +129,9 @@ export default function Home() {
           className="profileRelationsArea"
           style={{ gridArea: "profileRelationsArea" }}
         >
-        <ProfileRelationsBoxWrapper>
-          <CardList cardList={friendsList} title={'Amigos'} quantity={6}/>
-        </ProfileRelationsBoxWrapper>
-        <ProfileRelationsBoxWrapper>
-          <CardList cardList={community} title={'Comunidades'} quantity={6}/>
-        </ProfileRelationsBoxWrapper>
-
+          <CardList cardList={friendsList} title='Sigam me os bons...' quantity={6}/>
+          <CardList cardList={followers} title='Vou com os bons...' quantity={6}/>
+          <CardList cardList={community} title='Comunidades' quantity={6}/>
         </div>
 
       </MainGrid>

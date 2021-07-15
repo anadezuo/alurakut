@@ -1,6 +1,6 @@
 <h2 style="text-align: center;">  👷🏼‍♀️🚧 Cuidado - Obras em andamento 🚧</h2>
 
-### Olá, bem vindo ao Alurakut da Ana
+### Olá pessoa, seja bem vindo ao Alurakut da Ana
 
 Esse tem a minha carinha, mas você pode ter o seu também!
 

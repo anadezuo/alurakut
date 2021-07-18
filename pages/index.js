@@ -4,18 +4,21 @@ import MainGrid from "../src/components/MainGrid";
 import { AlurakutMenu, OrkutNostalgicIconSet } from "../src/lib/AlurakutCommons";
 import { AlurakutMenuProfileSidebar } from "../src/lib/AlurakutCommons";
 import { CardList } from "../src/components/CardList";
-import GitHubService from "../src/api/api";
+import GitHubService from "../src/api/apiGitHubService";
+import DacoService from "../src/api/apiDacoService";
 
 
 export default function Home() {
   const githubUser = "anadezuo";
+
+  const [nameCommunity, setNameCommunity] = useState('');
+  const [imageCommunity, setImageCommunity] = useState('');
 
   const [friendsList, setFriendsList] = useState([]);
   useEffect(() => {
     GitHubService.getFollowers(githubUser, 6, true).then((friendsGit) =>
       setFriendsList(friendsGit)
     );
-    //TODO: Desligar o useffect
   }, []);
 
   const [followers, setFollowers] = useState([]);
@@ -40,45 +43,38 @@ export default function Home() {
     //TODO: Desligar o useffect
   }, []);
 
-  const [community, setCommunity] = useState([
-    {
-      id: new Date().toISOString(),
-      name: 'Fazendo amizades',
-      image: 'https://img.cancaonova.com/cnimages/canais/uploads/sites/6/2019/10/formacao_1600x1200-a-amizade-e-um-dom-do-amor.jpg'
-    },
-    {
-      id: new Date().toISOString(),
-      name: 'Amor pela fotografia',
-      image: 'https://guiadoestudante.abril.com.br/wp-content/uploads/sites/4/2020/05/nota-docs-fotografia.jpg'
-    },
-    {
-      id: new Date().toISOString(),
-      name: 'Eu odeio acordar cedo',
-      image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
-    },{
-      id: new Date().toISOString(),
-      name: 'Igualdade',
-      image: 'https://static.vecteezy.com/system/resources/previews/000/533/153/non_2x/rainbow-flag-lgbt-symbol-on-heart-vector.jpg'
-    }
-  ]);
+  const [community, setCommunity] = useState([]);
+  useEffect(() => {
+    DacoService.getCommunity().then((communityDaco) => {
+      setCommunity(communityDaco)
+    });
+  }, []);
+
 
   function handleCreateCommunity(event){
     event.preventDefault();
 
-    const dadosForm = new FormData(event.target);
-
     const newCommunity = {
-      id: new Date().toISOString(),
-      name: dadosForm.get('title'),
-      image: dadosForm.get('image') ? dadosForm.get('image') : 'http://placehold.it/300x300'
+      name: nameCommunity,
+      image: imageCommunity ? imageCommunity : 'http://placehold.it/300x300',
+      creatorSlug: githubUser
     }
 
-    setCommunity([...community, newCommunity]);
-
-    /*Uma outra opção eh ter mais 2 useState, um para cada campo, que ao 
-    salvar ambas as informações no submit, incluir no de comunidades.*/
-    //const communityUpdate = [...community, event.target.value];
-    //setCommunity(communityUpdate);
+    fetch('/api/community', 
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type' : "application/json"
+        },
+        body: JSON.stringify(newCommunity)
+      })
+      .then(async (response) => {
+        const returnNewCommunity = await response.json();
+        const addCommunity = returnNewCommunity.newCommunity;
+        setCommunity([...community, addCommunity]);
+        setNameCommunity('');
+        setImageCommunity('');
+      })
   }
 
   //CURIOSIDADE: os parenteses é adicionado para quebra de linha
@@ -99,14 +95,18 @@ export default function Home() {
             <OrkutNostalgicIconSet />
           </Box>
           <Box>
-            <p>O que voce deseja fazer?</p>
+          <h2 className="subTitle">O que você deseja fazer?</h2>
             <form onSubmit={handleCreateCommunity}>
               <div>
                 <input className="subtitle"
                   placeholder="Qual vai ser o nome da sua comunidade?"
-                  name="title"
+                  name="name"
                   area-label="Qual vai ser o nome da sua comunidade?"
                   type="text"
+                  value={nameCommunity}
+                  onChange={(event) => {
+                    setNameCommunity(event.target.value);
+                  }}
                   >
                 </input>
                 <input 
@@ -114,6 +114,10 @@ export default function Home() {
                   name="image"
                   area-label="Coloque uma url para usarmos de capa"
                   type="url"
+                  value={imageCommunity}
+                  onChange={(event) => {
+                    setImageCommunity(event.target.value);
+                  }}
                   >
                 </input>
                 <button
@@ -129,9 +133,18 @@ export default function Home() {
           className="profileRelationsArea"
           style={{ gridArea: "profileRelationsArea" }}
         >
-          <CardList cardList={friendsList} title='Sigam me os bons...' quantity={6}/>
-          <CardList cardList={followers} title='Vou com os bons...' quantity={6}/>
-          <CardList cardList={community} title='Comunidades' quantity={6}/>
+          <CardList 
+            cardList={friendsList}
+            title='Sigam me os bons...'
+            quantity={6}/>
+          <CardList
+            cardList={followers}
+            title='Vou com os bons...'
+            quantity={6}/>
+          <CardList
+            cardList={community}
+            title='Comunidades'
+            quantity={6}/>
         </div>
 
       </MainGrid>

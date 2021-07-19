@@ -6,6 +6,7 @@ import nookies from 'nookies';
 export default function LoginScreen() {
   const router = useRouter();
   const [githubUser, setGithubUser] = useState('');
+  const [messageUser, setMessageUser] = useState('');
 
   return (
     <main style={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -21,7 +22,11 @@ export default function LoginScreen() {
         <section className="formArea">
           <form className="box" onSubmit={(event) => {
                 event.preventDefault();
-                console.log('Usuário: ', githubUser)
+                console.log('Usuário: ', githubUser);
+
+                if(githubUser.length === 0 )
+                  setMessageUser('Usuário não informado.');
+                
                 fetch('https://alurakut.vercel.app/api/login', {
                     method: 'POST',
                     headers: {
@@ -30,7 +35,7 @@ export default function LoginScreen() {
                     body: JSON.stringify({ githubUser: githubUser })
                 })
                 .then(async (respostaDoServer) => {
-                    const dadosDaResposta = await respostaDoServer.json()
+                    const dadosDaResposta = await respostaDoServer.json();
                     const token = dadosDaResposta.token;
                     nookies.set(null, 'USER_TOKEN', token, {
                         path: '/',
@@ -49,7 +54,7 @@ export default function LoginScreen() {
                     setGithubUser(evento.target.value)
                 }}
             />
-            { githubUser.length === 0 ? 'Preencha o campo' : '' }
+            { messageUser.length !== 0 ?  <p>{messageUser}</p> : '' }
             <button type="submit">
               Login
             </button>

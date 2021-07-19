@@ -159,19 +159,14 @@ export async function getServerSideProps(context) {
   const tokenDecode = jwt.decode(token);
   const githubUser = tokenDecode?.githubUser;
 
-  console.log(tokenDecode);
-  console.log(githubUser);
-  
-  /*const { isAuthenticated } = await fetch('https://alurakut.vercel.app/api/auth', {
+  const { isAuthenticated } = await fetch('http://alurakut-anadezuo.vercel.app/api/auth', {
     headers: {
       Authorization : token
     }
   })
   .then((res) => res.json())
-  console.log('isAuthenticated:' + isAuthenticated);*/
   
-  //if(!isAuthenticated){
-  if(!githubUser){
+  if(!isAuthenticated){
     return{
       redirect: {
         destination:'/login',
@@ -179,10 +174,11 @@ export async function getServerSideProps(context) {
       }
     }
   }
-  
+
   return {
     props: {
-      githubUser
-    }, // will be passed to the page component as props
+      githubUser: githubUser /*Como a propriedade também chama githubUser, não necessáriamente precisa passa-lá*/
+    },
   }
 }
+

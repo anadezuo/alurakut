@@ -9,8 +9,7 @@ export function CardList({ cardList, title, quantity }) {
         {title} ({cardList.length}){" "}
       </h2>
       <ul>
-        {cardList
-          .map((card) => {
+        {cardList.map((card) => {
             return (
               <Card
                 key={card.id}

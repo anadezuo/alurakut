@@ -15,7 +15,7 @@ export default class GitHubService {
     const followersGit = await resposta.json();
 
     let followersList = new Array();
-    followersGit.map((follower) => {
+    followersGit.forEach((follower) => {
       followersList.push({
         id: follower.login,
         name: follower.login,

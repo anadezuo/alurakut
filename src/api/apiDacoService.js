@@ -30,7 +30,7 @@ export default class DacoService{
     .then((res) => {
       
       const communityList = res.data.allCommunities;
-      communityList.map((com) => {
+      communityList.forEach((com) => {
         communityAll.push({
           id: com.id,
           name: com.name,

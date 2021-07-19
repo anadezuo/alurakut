@@ -6,10 +6,12 @@ import { AlurakutMenuProfileSidebar } from "../src/lib/AlurakutCommons";
 import { CardList } from "../src/components/CardList";
 import GitHubService from "../src/api/apiGitHubService";
 import DacoService from "../src/api/apiDacoService";
+import nookies from 'nookies';
+import jwt from 'jsonwebtoken';
 
 
-export default function Home() {
-  const githubUser = "anadezuo";
+export default function Home(props) {
+  const githubUser = props.githubUser;
 
   const [nameCommunity, setNameCommunity] = useState('');
   const [imageCommunity, setImageCommunity] = useState('');
@@ -30,7 +32,7 @@ export default function Home() {
     .then((followingGit) => {
 
       let followingAll = new Array();
-      followingGit.map((following) => {
+      followingGit.forEach((following) => {
         followingAll.push({
           id: following.login,
           name: following.login,
@@ -150,4 +152,38 @@ export default function Home() {
       </MainGrid>
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  //console.log('Cookies');
+  //console.log(nookies.get(context));
+  const token = nookies.get(context).USER_TOKEN;
+  const { githubUser } = jwt.decode(token);
+  
+  console.log(jwt.decode(token));
+  console.log('githubUser:' + githubUser);
+  
+  const { isAuthenticated } = await fetch('https://alurakut.vercel.app/api/auth', {
+    headers: {
+      Authorization : token
+    }
+  })
+  .then((res) => res.json())
+  
+  console.log('isAuthenticated:' + isAuthenticated);
+  
+  if(!isAuthenticated){
+    return{
+      redirect: {
+        destination:'/login',
+        permanent: false
+      }
+    }
+  }
+  
+  return {
+    props: {
+      githubUser
+    }, // will be passed to the page component as props
+  }
 }
